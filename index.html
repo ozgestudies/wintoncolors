@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winton Yağlı Boya Sentezi & Eşleştirici</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="glass-background"></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    
+    <div class="app-container">
+        <header>
+            <div class="logo-area">
+                <i class="fa-solid fa-palette paint-icon"></i>
+                <h1><span class="title-light">Winton</span> Sentezi</h1>
+            </div>
+            <p>Sanatsal renklerinizi tasarlayın veya aradığınız renge ulaşacak formülü öğrenin.</p>
+            
+            <div class="mode-switch">
+                <button class="mode-btn active" data-mode="mixer" id="btn-mode-mixer">
+                    <i class="fa-solid fa-flask"></i> Kendin Karıştır
+                </button>
+                <button class="mode-btn" data-mode="matcher" id="btn-mode-matcher">
+                    <i class="fa-solid fa-bullseye"></i> Hedef Rengi Bul
+                </button>
+            </div>
+        </header>
+
+        <!-- MIXER MODE -->
+        <main class="mode-section active" id="section-mixer">
+            <div class="mixer-layout">
+                <section class="panel color-palette">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-droplet panel-icon"></i> Winton Renkleri</h2>
+                    </div>
+                    <div class="colors-grid" id="colors-grid">
+                        <!-- Colors will be injected here by JS -->
+                    </div>
+                </section>
+
+                <section class="panel mixing-area">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-sliders panel-icon"></i> Karışım Ahengi</h2>
+                    </div>
+                    <div class="selected-colors" id="selected-colors">
+                        <div class="empty-state">
+                            <i class="fa-solid fa-wand-magic-sparkles mb-2"></i>
+                            <p>Büyüyü başlatmak için soldaki paletten renk seçin.</p>
+                        </div>
+                    </div>
+                    <button id="reset-btn" class="btn-primary">
+                        <i class="fa-solid fa-rotate-right"></i> Tuvali Temizle
+                    </button>
+                </section>
+
+                <section class="panel result-area">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-eye panel-icon"></i> Sentez Sonucu</h2>
+                    </div>
+                    <div class="result-card">
+                        <div class="color-result-display">
+                            <div class="mixed-color-preview" id="mixed-color-preview"></div>
+                            <div class="reflection"></div>
+                        </div>
+                        
+                        <div class="color-composition">
+                            <span class="info-label">Renk İçeriği (Hue)</span>
+                            <p id="compositionDisplay" class="composition-text">-</p>
+                        </div>
+
+                        <div class="color-info">
+                            <div class="info-group">
+                                <span class="info-label">HEX</span>
+                                <span class="hex-code" id="hexDisplay">#FFFFFF</span>
+                            </div>
+                            <div class="divider"></div>
+                            <div class="info-group">
+                                <span class="info-label">RGB</span>
+                                <span class="rgb-code" id="rgbDisplay">255, 255, 255</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- MATCHER MODE -->
+        <main class="mode-section" id="section-matcher" style="display: none;">
+            <div class="matcher-layout">
+                <section class="panel target-selection">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-crosshairs panel-icon"></i> Hedef Renginizi Belirleyin</h2>
+                    </div>
+                    
+                    <div class="target-picker-area">
+                        <!-- Switch between manual color and image upload -->
+                        <div class="picker-tabs">
+                            <button class="picker-tab active" id="tab-color-picker">Renk Seçici</button>
+                            <button class="picker-tab" id="tab-image-upload">Görselden Seç</button>
+                        </div>
+                        
+                        <!-- Manual Color Picker -->
+                        <div class="picker-view active" id="view-color-picker">
+                            <p class="instruction">Ulaşmak istediğiniz rengi aşağıdaki renk seçiciden belirleyin.</p>
+                            <div class="picker-container">
+                                <input type="color" id="target-color-picker" value="#4A90E2">
+                                <div class="target-color-preview" id="target-color-preview">
+                                    <div class="reflection"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Image Upload / Eyedropper -->
+                        <div class="picker-view" id="view-image-upload">
+                            <div class="upload-zone" id="upload-zone">
+                                <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                                <p>Fotoğraf yüklemek için tıklayın veya sürükleyin</p>
+                                <input type="file" id="image-input" accept="image/*" hidden>
+                            </div>
+                            
+                            <div class="canvas-container" id="canvas-container" style="display: none;">
+                                <p class="instruction">Görsel üzerinden istediğiniz bir renge tıklayın (Damlalık)</p>
+                                <div class="canvas-wrapper">
+                                    <canvas id="image-canvas"></canvas>
+                                    <div id="eyedropper-preview" class="eyedropper-preview"></div>
+                                </div>
+                                <button id="new-image-btn" class="btn-secondary" style="margin-top: 1rem; width: 100%;">Başka Fotoğraf Yükle</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Common Result Info -->
+                        <div class="target-info" style="margin-top: 2rem;">
+                            <span class="info-label">Seçili Renk</span>
+                            <span class="hex-code" id="target-hex" style="display: block; margin-top: 0.5rem; font-size: 1.5rem;">#4A90E2</span>
+                            <div class="selected-color-thumb" id="selected-color-thumb"></div>
+                        </div>
+                        
+                        <button id="find-match-btn" class="btn-primary" style="margin-top: 1.5rem;">
+                            <i class="fa-solid fa-magnifying-glass"></i> Formülü Bul
+                        </button>
+                    </div>
+                </section>
+
+                <section class="panel match-results">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-list-check panel-icon"></i> Önerilen Karışım Formülü</h2>
+                    </div>
+                    
+                    <div id="recipe-container" class="recipe-container">
+                        <div class="empty-state">
+                            <i class="fa-solid fa-palette mb-2"></i>
+                            <p>Hedef renginizi seçip sol taraftan "Formülü Bul" butonuna tıklayın.</p>
+                        </div>
+                    </div>
+                    
+                </section>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
